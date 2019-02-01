@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Service;
+
+class TokenGeneratorService
+{
+    public function generate()
+    {
+        return bin2hex(openssl_random_pseudo_bytes(24));
+    }
+}

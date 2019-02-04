@@ -9,15 +9,26 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User
 {
+    /**
+     * User constructor.
+     * @param string $name
+     * @param string $email
+     * @param string $role
+     * @param string $hash
+     * @param string $token
+     * @throws \Exception
+     */
     public function __construct(
         string $name,
         string $email,
-        string $salt,
-        string $hash
+        string $role,
+        string $hash,
+        string $token
     ){
         $this->setName($name);
         $this->setEmail($email);
-        $this->setSalt($salt);
+        $this->setRole($role);
+        $this->setToken($token);
         $this->setHash($hash);
         $this->setCreated(new \DateTime('now'));
         $this->setUpdated(null);
@@ -56,9 +67,20 @@ class User
     private $hash;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $token;
+
+    /**
      * @ORM\Column(type="text")
      */
-    private $salt;
+    private $role;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Login")
+     * @ORM\Column(nullable=true)
+     */
+    private $last_login;
 
     public function getId(): ?int
     {
@@ -125,14 +147,38 @@ class User
         return $this;
     }
 
-    public function getSalt(): ?string
+    public function getToken(): ?string
     {
-        return $this->salt;
+        return $this->token;
     }
 
-    public function setSalt(string $salt): self
+    public function setToken(?string $token): self
     {
-        $this->salt = $salt;
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?Login
+    {
+        return $this->last_login;
+    }
+
+    public function setLastLogin(?Login $last_login): self
+    {
+        $this->last_login = $last_login;
 
         return $this;
     }

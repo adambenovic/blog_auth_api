@@ -3,11 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class UserRepository extends ServiceEntityRepository
+class UserRepository extends BaseRepository
 {
+    /**
+     * UserRepository constructor.
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, User::class);
@@ -21,17 +24,13 @@ class UserRepository extends ServiceEntityRepository
     {
         $user = null;
 
-        try
-        {
+        try {
             $user = $this->createQueryBuilder('a')
                 ->andWhere('a.id= :val')
                 ->setParameter('val', $id)
                 ->getQuery()
-                ->getOneOrNullResult()
-            ;
-        }
-        catch (\Doctrine\ORM\NonUniqueResultException $ex)
-        {
+                ->getOneOrNullResult();
+        } catch (\Doctrine\ORM\NonUniqueResultException $ex) {
             echo "User not unique. NEVER HAPPENS";
         }
 
@@ -46,17 +45,13 @@ class UserRepository extends ServiceEntityRepository
     {
         $user = null;
 
-        try
-        {
+        try {
             $user = $this->createQueryBuilder('a')
                 ->andWhere('a.name= :val')
                 ->setParameter('val', $name)
                 ->getQuery()
-                ->getOneOrNullResult()
-            ;
-        }
-        catch (\Doctrine\ORM\NonUniqueResultException $ex)
-        {
+                ->getOneOrNullResult();
+        } catch (\Doctrine\ORM\NonUniqueResultException $ex) {
             echo "User not unique. NEVER HAPPENS";
         }
 

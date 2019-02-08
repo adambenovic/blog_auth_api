@@ -11,12 +11,12 @@ class Login
 {
     /**
      * Login constructor.
-     * @param User $user
+     * @param Api_User $user
      * @throws \Exception
      */
-    public function __construct(User $user)
+    public function __construct(Api_User $user)
     {
-        $this->user_id = $user;
+        $this->user = $user;
         $this->last_login = new \DateTime('now');
     }
 
@@ -28,12 +28,12 @@ class Login
     private $id;
 
     /**
-     * @var User
+     * @var Api_User
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Api_User", inversedBy="last_login")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user_id;
+    private $user;
 
     /**
      * @ORM\Column(type="datetime")
@@ -45,14 +45,14 @@ class Login
         return $this->id;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?Api_User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(User $user_id): self
+    public function setUser(Api_User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }

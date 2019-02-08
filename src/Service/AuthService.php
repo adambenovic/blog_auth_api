@@ -4,13 +4,13 @@ namespace App\Service;
 
 use App\Factory\LoginFactory;
 use App\Repository\LoginRepository;
-use App\Repository\UserRepository;
+use App\Repository\ApiUserRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AuthService
 {
     /**
-     * @var UserRepository
+     * @var ApiUserRepository
      */
     private $userRepo;
 
@@ -42,7 +42,7 @@ class AuthService
     /**
      * AuthService constructor.
      * @param ContainerInterface $container
-     * @param UserRepository $userRepo
+     * @param ApiUserRepository $userRepo
      * @param TokenService $tokenService
      * @param PasswordService $passwordService
      * @param LoginFactory $loginFactory
@@ -50,7 +50,7 @@ class AuthService
      */
     public function __construct(
         ContainerInterface $container,
-        UserRepository $userRepo,
+        ApiUserRepository $userRepo,
         TokenService $tokenService,
         PasswordService $passwordService,
         LoginFactory $loginFactory,
@@ -67,10 +67,11 @@ class AuthService
     /**
      * @param array $data
      * @return array
+     * @throws \Exception
      */
     public function checkPassword(array $data)
     {
-        $user = $this->userRepo->getUserByID($data['user_id']);
+        $user = $this->userRepo->getUserByName($data["name"]);
 
         if($user === null)
             return [

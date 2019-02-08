@@ -2,15 +2,16 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ApiUserRepository")
  */
-class User
+class Api_User
 {
     /**
-     * User constructor.
+     * ApiUser constructor.
      * @param string $name
      * @param string $email
      * @param string $role
@@ -32,6 +33,7 @@ class User
         $this->setHash($hash);
         $this->setCreated(new \DateTime('now'));
         $this->setUpdated(null);
+        $this->last_login = new ArrayCollection();
     }
 
     /**
@@ -77,8 +79,8 @@ class User
     private $role;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Login")
-     * @ORM\Column(nullable=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Login", mappedBy="user")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $last_login;
 
@@ -173,12 +175,12 @@ class User
 
     public function getLastLogin(): ?Login
     {
-        return $this->last_login;
+        return $this->last_login->first();
     }
 
     public function setLastLogin(?Login $last_login): self
     {
-        $this->last_login = $last_login;
+        $this->last_login->add($last_login);
 
         return $this;
     }

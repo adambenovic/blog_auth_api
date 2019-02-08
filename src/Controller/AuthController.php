@@ -39,8 +39,9 @@ class AuthController extends AbstractController
 
     /**
      * @Route("/register", methods={"POST"})
-     * @param Request $request The Request
+     * @param Request $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function createUser(Request $request): JsonResponse
     {
@@ -60,16 +61,19 @@ class AuthController extends AbstractController
 
     /**
      * @Route("/login", methods={"POST"})
-     * @param Request $request The Request
+     * @param Request $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function checkPassword(Request $request): JsonResponse
     {
-        $data = json_decode($request);
+        $requestContent = $request->getContent();
+        $data = json_decode($requestContent, true);
+
         $checked = $this->checkUserService->checkPassword($data);
 
         if($checked['user_id'] == null)
-            return new JsonResponse(["error" => "User not found."], 404);
+            return new JsonResponse(["error" => "ApiUser not found."], 404);
 
         if($checked['token'] == null)
             return new JsonResponse(["error" => "Password incorrect."], 403);
@@ -90,11 +94,13 @@ class AuthController extends AbstractController
      */
     public function checkToken(Request $request): JsonResponse
     {
-        $data = json_decode($request);
+        $requestContent = $request->getContent();
+        $data = json_decode($requestContent, true);
+
         $checked = $this->checkUserService->checkToken($data);
 
         if($checked['user_id'] == null)
-            return new JsonResponse(["error" => "User not found."], 404);
+            return new JsonResponse(["error" => "ApiUser not found."], 404);
 
         if($checked['token'] == null)
             return new JsonResponse(["error" => "Password incorrect."], 403);
@@ -109,14 +115,16 @@ class AuthController extends AbstractController
      */
     public function logout(Request $request): JsonResponse
     {
-        $data = json_decode($request);
+        $requestContent = $request->getContent();
+        $data = json_decode($requestContent, true);
+        
         $logout = $this->checkUserService->deleteToken($data);
 
         if($logout === null)
-            return new JsonResponse(["error" => "User not found."], 404);
+            return new JsonResponse(["error" => "ApiUser not found."], 404);
 
         if(!$logout)
-            return new JsonResponse(["error" => "User was not logged in. Can not logout."], 404);
+            return new JsonResponse(["error" => "ApiUser was not logged in. Can not logout."], 404);
 
         return new JsonResponse([], 200);
     }

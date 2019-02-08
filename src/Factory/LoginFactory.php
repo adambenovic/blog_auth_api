@@ -3,7 +3,7 @@
 namespace App\Factory;
 
 use App\Entity\Login;
-use App\Entity\User;
+use App\Entity\Api_User;
 use App\Repository\LoginRepository;
 
 class LoginFactory
@@ -24,10 +24,11 @@ class LoginFactory
     }
 
     /**
-     * @param User $user
+     * @param Api_User $user
      * @return Login
+     * @throws \Exception
      */
-    public function createLogin(User $user)
+    public function createLogin(Api_User $user)
     {
         return new Login($user);
     }
